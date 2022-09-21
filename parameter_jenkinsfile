@@ -1,0 +1,42 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('delete_workspace') {
+            steps {
+              
+              sh 'rm -rf *'
+              
+            }
+        } 
+
+        stage('git clone ansible') {
+            steps {
+              dir('ansible'){
+                
+               git branch: 'master', credentialsId: 'bitbucket', url: 'https://thirupathirathode@bitbucket.org/thirupathirathode/parameter.git'
+              }
+              dir('maven'){
+                git branch: 'master', url: "https://github.com/nareshinst/raviLogin.git"   
+              }
+            }
+        }
+        stage(maven){
+            steps{
+                dir('maven'){
+                    sh 'mvn clean install'
+                }
+            }
+        }
+        stage('ansible') {
+            steps {
+               dir('ansible'){
+                // ansiblePlaybook extras: 'server=ser-dev', inventory: 'ansible/linix_hosts', playbook: 'ansible/parameter.yaml'
+                sh 'ansible-playbook -i linix_hosts parameter.yaml --extra-vars "server=$SERVER"'
+               }
+              
+            }
+        }        
+        
+     }
+ }
