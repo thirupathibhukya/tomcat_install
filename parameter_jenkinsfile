@@ -32,7 +32,7 @@ pipeline {
             steps {
                dir('ansible'){
                 // ansiblePlaybook extras: 'server=ser-dev', inventory: 'ansible/linix_hosts', playbook: 'ansible/parameter.yaml'
-                sh 'ansible-playbook -i linix_hosts parameter.yaml --extra-vars "server=$SERVER"'
+                sh 'ansible-playbook -i linix_hosts tomcat.yaml --extra-vars "server=$SERVER"'
                }
               
             }
